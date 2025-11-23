@@ -1,29 +1,34 @@
- 
 import AuthForm from "../components/AuthForm";
 import { useRegister } from "../hooks/useRegister";
 import { registerSchema } from "../validations/auth.schema";
+import { useState } from "react";
 
 export default function RegisterPage() {
   const register = useRegister();
-
+  const [errors, setErrors] = useState({});
   const handleSubmit = (data) => {
-    const parsed = registerSchema.safeParse(data);
+    const normalizedData = {
+      name: data.name ?? "",
+      email: data.email ?? "",
+      password: data.password ?? "",
+    };
+    const parsed = registerSchema.safeParse(normalizedData);
     if (!parsed.success) {
-      console.log(parsed.error.flatten().fieldErrors);
+      setErrors(parsed.error.flatten().fieldErrors);
       return;
     }
+    setErrors({});
     register.mutate(parsed.data);
   };
 
   return (
     <div>
-      <h1>Crear cuenta</h1>
-
       <AuthForm
-        fields={["name"]}
+        fields={["name", "email", "password"]}
         buttonText="Registrarme"
         loading={register.isLoading}
         onSubmit={handleSubmit}
+        errors={errors}
       />
     </div>
   );

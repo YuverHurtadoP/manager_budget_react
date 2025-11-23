@@ -10,6 +10,7 @@ import ProtectedRoute from "../shared/components/ProtectedRoute";
 // Auth pages
 import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
+import HomePage from "../features/home/HomePage"; 
 /*
 // User pages
 import ProfilePage from "../features/user/pages/ProfilePage";
@@ -39,6 +40,17 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+
+  {
+    path: "/home",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <HomePage />
+        </Layout>
+      </ProtectedRoute>
+    ),
   },
 
   // ------------------------------
