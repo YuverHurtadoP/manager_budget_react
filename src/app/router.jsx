@@ -10,13 +10,15 @@ import ProtectedRoute from "../shared/components/ProtectedRoute";
 // Auth pages
 import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
-import HomePage from "../features/home/HomePage"; 
+import HomePage from "../features/home/HomePage";
+import BudgetListPage from "../features/budgets/pages/BudgetListPage";
 /*
 // User pages
 import ProfilePage from "../features/user/pages/ProfilePage";
 
 // Budget pages
 import BudgetListPage from "../features/budgets/pages/BudgetListPage";
+/*
 import BudgetCreatePage from "../features/budgets/pages/BudgetCreatePage";
 import BudgetEditPage from "../features/budgets/pages/BudgetEditPage";
 
@@ -54,9 +56,25 @@ export const router = createBrowserRouter([
   },
 
   // ------------------------------
+  // Ruta de prueba (sin autenticación)
+  // ------------------------------
+
+  {
+    path: "/budgets",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <BudgetListPage />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+
+  // ------------------------------
   // Rutas privadas
   // ------------------------------
-  /*{
+  /*
+  {
     path: "/",
     element: (
       <ProtectedRoute>
@@ -66,38 +84,14 @@ export const router = createBrowserRouter([
 
     // Hijos del Layout
     children: [
-      // USER
       {
-        path: "profile",
-        element: <ProfilePage />,
+        path: "home",
+        element: <HomePage />,
       },
-
       // BUDGETS
       {
         path: "budgets",
         element: <BudgetListPage />,
-      },
-      {
-        path: "budgets/create",
-        element: <BudgetCreatePage />,
-      },
-      {
-        path: "budgets/:id/edit",
-        element: <BudgetEditPage />,
-      },
-
-      // EXPENSES
-      {
-        path: "budgets/:budgetId/expenses",
-        element: <ExpenseListPage />,
-      },
-      {
-        path: "budgets/:budgetId/expenses/create",
-        element: <ExpenseCreatePage />,
-      },
-      {
-        path: "budgets/:budgetId/expenses/:expenseId/edit",
-        element: <ExpenseEditPage />,
       },
     ],
   },*/

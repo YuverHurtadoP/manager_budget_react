@@ -1,5 +1,23 @@
-
+import { Link } from "react-router-dom";
 import { useAuth } from "../../shared/hooks/useAuth";
+
+const cards = [
+  {
+    title: "Presupuestos",
+    description: "Crear, editar y listar tus presupuestos.",
+    path: "/budgets",
+  },
+  {
+    title: "Gastos",
+    description: "Registrar y consultar gastos asociados.",
+    path: "/expenses",
+  },
+  {
+    title: "Mi Perfil",
+    description: "Editar información de tu cuenta.",
+    path: "/profile",
+  },
+];
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -15,37 +33,18 @@ export default function HomePage() {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-
-        <a
-          href="/budgets"
-          className="p-4 border rounded-lg shadow-sm hover:shadow-md transition"
-        >
-          <h2 className="text-xl font-medium">Presupuestos</h2>
-          <p className="text-gray-500 text-sm mt-1">
-            Crear, editar y listar tus presupuestos.
-          </p>
-        </a>
-
-        <a
-          href="/expenses"
-          className="p-4 border rounded-lg shadow-sm hover:shadow-md transition"
-        >
-          <h2 className="text-xl font-medium">Gastos</h2>
-          <p className="text-gray-500 text-sm mt-1">
-            Registrar y consultar gastos asociados.
-          </p>
-        </a>
-
-        <a
-          href="/profile"
-          className="p-4 border rounded-lg shadow-sm hover:shadow-md transition"
-        >
-          <h2 className="text-xl font-medium">Mi Perfil</h2>
-          <p className="text-gray-500 text-sm mt-1">
-            Editar información de tu cuenta.
-          </p>
-        </a>
-
+        {cards.map((card) => (
+          <Link
+            key={card.path}
+            to={card.path}
+            className="p-4 border rounded-lg shadow-sm hover:shadow-md transition hover:scale-[1.02]"
+          >
+            <h2 className="text-xl font-medium">{card.title}</h2>
+            <p className="text-gray-500 text-sm mt-1">
+              {card.description}
+            </p>
+          </Link>
+        ))}
       </div>
     </div>
   );
