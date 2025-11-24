@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { budgetSchema } from "../validations/budget.schema";
 import type { Budget } from "../../../shared/types";
 
 interface BudgetFormModalProps {
@@ -18,39 +19,48 @@ const BudgetFormModal = ({
     nombre: "",
     valor: 0,
     descripcion: "",
-    startDate: "",
-    endDate: "",
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (initialData) {
       setFormData({
         nombre: initialData.nombre,
         valor: initialData.valor,
-        descripcion: initialData.descripcion,
-        startDate: initialData.startDate.split("T")[0], // Format for input date
-        endDate: initialData.endDate.split("T")[0],
+        descripcion: initialData.descripcion || "",
       });
     } else {
       setFormData({
         nombre: "",
         valor: 0,
         descripcion: "",
-        startDate: "",
-        endDate: "",
       });
     }
+    setErrors({});
   }, [initialData, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrors({});
+
     try {
-      await onSubmit(formData as any); // Type casting for simplicity, ideally strict types
+      const validated = budgetSchema.parse(formData);
+      await onSubmit(validated as any);
       onClose();
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch (error: any) {
+      if (error.issues) {
+        const newErrors: Record<string, string> = {};
+        error.issues.forEach((issue: any) => {
+          if (issue.path[0]) {
+            newErrors[issue.path[0]] = issue.message;
+          }
+        });
+        setErrors(newErrors);
+      } else {
+        console.error("Error submitting form:", error);
+      }
     } finally {
       setLoading(false);
     }
@@ -78,13 +88,18 @@ const BudgetFormModal = ({
             <input
               type="text"
               placeholder="Ej: Gastos Mensuales"
-              className="input input-bordered w-full focus:input-primary"
+              className={`input input-bordered w-full focus:input-primary ${errors.nombre ? "input-error" : ""
+                }`}
               value={formData.nombre}
               onChange={(e) =>
                 setFormData({ ...formData, nombre: e.target.value })
               }
-              required
             />
+            {errors.nombre && (
+              <label className="label">
+                <span className="label-text-alt text-error">{errors.nombre}</span>
+              </label>
+            )}
           </div>
 
           <div className="form-control">
@@ -94,30 +109,40 @@ const BudgetFormModal = ({
             <input
               type="number"
               placeholder="0.00"
-              className="input input-bordered w-full focus:input-primary"
+              className={`input input-bordered w-full focus:input-primary ${errors.valor ? "input-error" : ""
+                }`}
               value={formData.valor}
               onChange={(e) =>
-                setFormData({ ...formData, valor: parseFloat(e.target.value) })
+                setFormData({ ...formData, valor: parseFloat(e.target.value) || 0 })
               }
-              required
               min="0"
             />
+            {errors.valor && (
+              <label className="label">
+                <span className="label-text-alt text-error">{errors.valor}</span>
+              </label>
+            )}
           </div>
 
           <div className="form-control">
             <label className="label">
               <span className="label-text font-medium">Descripción</span>
             </label>
-            <input
-              type="text"
+            <textarea
               placeholder="Ej: Gastos de comida, transporte, etc."
-              className="input input-bordered w-full focus:input-primary"
+              className={`textarea textarea-bordered w-full focus:textarea-primary ${errors.descripcion ? "textarea-error" : ""
+                }`}
               value={formData.descripcion}
               onChange={(e) =>
                 setFormData({ ...formData, descripcion: e.target.value })
               }
-              required
+              rows={3}
             />
+            {errors.descripcion && (
+              <label className="label">
+                <span className="label-text-alt text-error">{errors.descripcion}</span>
+              </label>
+            )}
           </div>
 
           <div className="modal-action">
