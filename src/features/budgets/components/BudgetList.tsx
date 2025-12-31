@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useBudgets } from "../hooks/useBudgets";
 import BudgetFormModal from "./BudgetFormModal";
 import type { Budget } from "../../../shared/types";
+import { Link } from "react-router-dom";
 
 const BudgetList = () => {
     const { budgets, isLoading, isError, createBudget, updateBudget, deleteBudget } =
@@ -87,7 +88,7 @@ const BudgetList = () => {
                                     key={budget.id}
                                     className="hover:bg-base-200/30 transition-colors duration-200"
                                 >
-                                    <td className="pl-6 font-semibold text-lg">{budget.nombre}</td>
+                                    <td className="pl-6 font-semibold text-lg"> <Link to={`/expenses/${budget.id}`}>{budget.nombre}</Link></td>
                                     <td className="font-medium">
                                         ${budget.valor.toLocaleString()}
                                     </td>

@@ -12,6 +12,7 @@ import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
 import HomePage from "../features/home/HomePage";
 import BudgetListPage from "../features/budgets/pages/BudgetListPage";
+import ExpenseListPage from "../features/expenses/pages/ExpenseListPage";
 /*
 // User pages
 import ProfilePage from "../features/user/pages/ProfilePage";
@@ -65,6 +66,17 @@ export const router = createBrowserRouter([
       <ProtectedRoute>
         <Layout>
           <BudgetListPage />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "/expenses/:budgetId",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <ExpenseListPage />
         </Layout>
       </ProtectedRoute>
     ),
